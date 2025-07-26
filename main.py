@@ -84,7 +84,7 @@ try:
     print(f"ESP32 Connected on {SERIAL_PORT}.")
 except serial.SerialException as e:
     print(f"Error connecting to ESP32: {e}")
-    exit()
+    #exit()
 time.sleep(2)  # Give ESP32 time to initialize after connection
 
 cap = cv2.VideoCapture(0)

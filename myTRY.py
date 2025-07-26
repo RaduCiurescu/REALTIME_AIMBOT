@@ -40,7 +40,7 @@ try:
     print(f"ESP32 Connected on {SERIAL_PORT}.")
 except serial.SerialException as e:
     print(f"Error connecting to ESP32: {e}")
-    exit()
+    #exit()
 time.sleep(2)  # Give ESP32 time to initialize after connection
 
 
@@ -65,6 +65,7 @@ if cap.get(cv2.CAP_PROP_FRAME_WIDTH) != FRAME_WIDTH or \
     # You might need to adjust CAMERA_CENTER_X/Y if actual resolution differs
 
 while True:
+    #this needs to be calculated
     Z_real = 23
     ret, frame = cap.read()
     frame = cv2.flip(frame, 1)
@@ -94,7 +95,7 @@ while True:
         # re-zero around image center
         centerOrigin_X = cx - FRAME_WIDTH / 2
         centerOrigin_Y = FRAME_HEIGHT / 2 - cy
-        #distance_virtual = (((hand_x2 - hand_x1) ** 2) + ((hand_y2 - hand_y1) ** 2)) ** (1 / 2)
+        distance_virtual = (((x_rect - w_rect) ** 2) + ((y_rect - h_rect) ** 2)) ** (1 / 2)
         # draw the rectangle and a dot at the center
         cv2.rectangle(
             frame,
@@ -119,13 +120,14 @@ while True:
 
         x_real=centerOrigin_X *(5/w_rect)
         y_real=centerOrigin_Y * (5/w_rect)
+        #obj distance to ?
         angles= turret_angles.turret(x_real,y_real,25)
         angles.offsets(0,2,-1)
         angles.getAngles()
         data_to_send = f"{int(angles.getTheta_x())},{int(angles.getTheta_y()+1)}\n"
-        esp32.write(data_to_send.encode())
+        #esp32.write(data_to_send.encode())
 
-        print(f"OBIECTUL E IN:{centerOrigin_X},{centerOrigin_Y}")
+        print(f"OBIECTUL E IN:{centerOrigin_X},{centerOrigin_Y}=====: muta in {distance_virtual}")
         print(f"x:{int(angles.getTheta_x())} si y:{int(angles.getTheta_y())}")
 
     cv2.imshow("3D Object Tracker", frame)
