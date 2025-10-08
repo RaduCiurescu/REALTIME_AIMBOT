@@ -1,8 +1,7 @@
 import cv2
 import numpy as np
 import serial
-import time
-import turret_angles # Our custom module
+from RUN import turret_angles
 
 # webcam
 camera = cv2.VideoCapture(0)  #turn on webcam

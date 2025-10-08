@@ -1,11 +1,10 @@
 # calibrate.py
 import numpy as np
 
-# --- Paste your collected data here ---
 # The pixel radius values you recorded
-pixel_radius_x = [195, 148, 115, 78, 58, 47, 39]
+pixel_radius_x = [300, 255, 190, 170, 148, 125, 109, 89, 82, 73]
 # The real distances you measured with a tape measure
-real_distance_y = [30, 40, 50, 75, 100, 125, 150]
+real_distance_y = [20, 25, 30, 35, 40, 45, 50, 55, 60, 65]
 
 # --- Calculate the coefficients ---
 # Use a 2nd degree polynomial (quadratic)
