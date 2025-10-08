@@ -1,1 +1,85 @@
-file u de cpp trebuie incarcat pe un microcontroller, motoarele conectate la pinii corespunzatori (sa fie pini care permit pwm), codul este facut pentru un obiect in jur de 20 cm, offsetul ar trebuii ajustat conform 
+Acest proiect folosește o cameră web și un PC pentru a calcula poziția 3D a unui obiect verde. Datele sunt trimise unui microcontroller ESP32 care orientează o turretă laser pentru a urmări obiectul în timp real.
+
+Componente Necesare
+
+- Hardware:
+	- Microcontroller ESP32
+
+	- 2 x Servomotoare (ex: SG90)
+
+	- 1 x Modul Laser 5V
+
+	- ATENȚIE: Sursă de alimentare externă de 5V (min. 1-2A) pentru servomotoare!
+
+	- Cameră web
+
+
+- Software:
+	- Python 3.8+ (opencv-python, numpy, pyserial)
+
+	- VS Code cu extensia PlatformIO
+
+
+Conectare Hardware
+
+- Servo X (Orizontal): Semnal la GPIO26
+
+- Servo Y (Vertical): Semnal la GPIO25
+
+- Laser: Semnal la GPIO33
+
+- Alimentare Servomotoare: VCC și GND la sursa externă de 5V.
+
+- Masă Comună (GND): Conectați GND-ul sursei externe la un pin GND al ESP32-ului. Acest pas este esențial!
+
+Configurare
+
+Pasul 1: Microcontroller (ESP32)
+
+1. Creați un proiect nou în PlatformIO pentru Espressif ESP32 Dev Module.
+
+2. În platformio.ini, adăugați: lib_deps = madhephaestus/ESP32Servo@^0.13.0
+
+3. Copiați codul din main.cpp în fișierul src/main.cpp.
+
+4. Încărcați codul pe ESP32.
+
+Pasul 2: PC (Python)
+
+1. Copiați fișierele main.py și turret_angles.py într-un folder.
+
+2. Instalați bibliotecile: pip install opencv-python numpy pyserial
+
+3. Modificați main.py: Setați SERIAL_PORT la portul COM corect al ESP32-ului.
+
+Calibrare Obligatorie
+
+
+Pentru ca proiectul să funcționeze corect, trebuie să ajustați următorii parametri în main.py:
+
+
+1. Culoare: Modificați valorile HSV lower_light_green și upper_light_green pentru a se potrivi cu obiectul și iluminarea voastră.
+
+2. Distanța (Axa Z): Constantele din funcția calculate_z_real sunt calibrate pentru un obiect specific. Dacă urmărirea adâncimii este imprecisă, trebuie să colectați propriul set de date (pixel_radius, distanta_reala_cm) și să recalculați constantele.
+
+3. Offset-uri Fizice (Cel mai important!):
+	- Ajustați variabilele TURRET_OFFS_X, TURRET_OFFS_Y, TURRET_OFFS_Z.
+
+	- Acestea reprezintă distanța (în cm) dintre centrul camerei și punctul de pivot al turetei. Ajustați-le conform construcției fizice a robotului vostru.
+
+
+Rulare
+
+1. Asigurați-vă că ESP32-ul și servomotoarele sunt alimentate.
+
+2. Rulați scriptul main.py.
+
+3. Apăsați 'q' în fereastra video pentru a opri.
+
+Depanare Rapidă
+
+- Mișcare Inversată: În turret_angles.py, inversați semnele + și - în secțiunile de calcul pentru theta_x și theta_y.
+
+- Servomotoare Tremură: Verificați sursa de alimentare externă și conexiunea la masă (GND).
+
+- Eroare Port Serial: Verificați dacă portul COM este corect în Python și nu este folosit de alt program.
